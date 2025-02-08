@@ -9,5 +9,6 @@ urlpatterns = [
     path('api/v1/review', views.review_list_api_view),
     path('api/v1/directors/<int:id>/', views.directors_detail_api_view),
     path('api/v1/movie/<int:id>/', views.movie_detail_api_view),
-    path('api/v1/review/<int:id>/', views.review_detail_api_view)
+    path('api/v1/review/<int:id>/', views.review_detail_api_view),
+    path('api/v1/movies/reviews/', views.movies_with_reviews_api_view)
 ]

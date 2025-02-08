@@ -3,15 +3,24 @@ from rest_framework.response import Response
 from movie_app.models import Director, Movie, Review
 from movie_app.serializers import DirectorSerializer, MovieSerializer, ReviewSerializer
 from rest_framework import status
+from django.db.models import Count, Avg
 
 @api_view(http_method_names=['GET'])
 def directors_list_api_view(request):
-    # step 1: collect data from db (QuerySet)
-    directors = Director.objects.all()
+    directors = Director.objects.annotate(movies_count=Count('director'))
     # step 2: Reformat (Serialize) queryset to list of dictionaries
     data = DirectorSerializer(instance=directors, many=True).data
     # step 3: Response data and status 
     return Response(data=data, status=200)
+
+
+@api_view(http_method_names=['GET'])
+def movies_with_reviews_api_view(request):
+    # Аннотация для среднего рейтинга по отзывам
+    movies = Movie.objects.annotate(rating=Avg('reviews__stars'))
+    data = MovieSerializer(instance=movies, many=True).data
+    return Response(data=data, status=200)
+
 
 @api_view(http_method_names=['GET'])
 def movie_list_api_view(request):
